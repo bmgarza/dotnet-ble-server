@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DotnetBleServer.Core;
+using DotnetBleServer.Utilities;
 
 namespace Examples
 {
@@ -16,8 +17,9 @@ namespace Examples
                 using (var serverContext = new ServerContext())
                 {
                     await serverContext.Connect();
-                    await SampleAdvertisement.RegisterSampleAdvertisement(serverContext);
-                    await SampleGattApplication.RegisterGattApplication(serverContext);
+                    string bluetoothAdapter = (await BluetoothAdapterUtils.GetBluetoothAdapters(serverContext.Connection))[0];
+                    await SampleAdvertisement.RegisterSampleAdvertisement(bluetoothAdapter, serverContext);
+                    await SampleGattApplication.RegisterGattApplication(bluetoothAdapter, serverContext);
 
                     Console.WriteLine("Press CTRL+C to quit");
                     await Task.Delay(-1);

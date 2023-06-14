@@ -9,10 +9,12 @@ namespace DotnetBleServer.Advertisements
     public class AdvertisingManager
     {
         private readonly ServerContext _Context;
+        private readonly string _BluezAdapterPath;
 
-        public AdvertisingManager(ServerContext context)
+        public AdvertisingManager(ServerContext context, string bluezAdapterPath)
         {
             _Context = context;
+            _BluezAdapterPath = bluezAdapterPath;
         }
 
         public async Task RegisterAdvertisement(Advertisement advertisement)
@@ -28,13 +30,13 @@ namespace DotnetBleServer.Advertisements
 
         private ILEAdvertisingManager1 GetAdvertisingManager()
         {
-            return _Context.Connection.CreateProxy<ILEAdvertisingManager1>("org.bluez", "/org/bluez/hci0");
+            return _Context.Connection.CreateProxy<ILEAdvertisingManager1>("org.bluez", _BluezAdapterPath);
         }
 
         public async Task CreateAdvertisement(AdvertisementProperties advertisementProperties)
         {
             var advertisement = new Advertisement("/org/bluez/example/advertisement0", advertisementProperties);
-            await new AdvertisingManager(_Context).RegisterAdvertisement(advertisement);
+            await new AdvertisingManager(_Context, _BluezAdapterPath).RegisterAdvertisement(advertisement);
         }
     }
 }

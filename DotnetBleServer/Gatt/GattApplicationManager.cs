@@ -11,10 +11,12 @@ namespace DotnetBleServer.Gatt
     public class GattApplicationManager
     {
         private readonly ServerContext _ServerContext;
+        private readonly string _BluezAdapterPath;
 
-        public GattApplicationManager(ServerContext serverContext)
+        public GattApplicationManager(ServerContext serverContext, string bluezAdapterPath)
         {
             _ServerContext = serverContext;
+            _BluezAdapterPath = bluezAdapterPath;
         }
 
         public async Task RegisterGattApplication(IEnumerable<GattServiceDescription> gattServiceDescriptions)
@@ -53,7 +55,7 @@ namespace DotnetBleServer.Gatt
 
         private async Task RegisterApplicationInBluez(string applicationObjectPath)
         {
-            var gattManager = _ServerContext.Connection.CreateProxy<IGattManager1>("org.bluez", "/org/bluez/hci0");
+            var gattManager = _ServerContext.Connection.CreateProxy<IGattManager1>("org.bluez", _BluezAdapterPath);
             await gattManager.RegisterApplicationAsync(new ObjectPath(applicationObjectPath), new Dictionary<string, object>());
         }
 

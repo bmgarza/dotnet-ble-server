@@ -6,7 +6,7 @@ namespace Examples
 {
     public class SampleAdvertisement
     {
-        public static async Task RegisterSampleAdvertisement(ServerContext serverContext)
+        public static async Task RegisterSampleAdvertisement(string bluezAdapterPath, ServerContext serverContext)
         {
             var advertisementProperties = new AdvertisementProperties
             {
@@ -15,7 +15,7 @@ namespace Examples
                 LocalName = "A",
             };
 
-            await new AdvertisingManager(serverContext).CreateAdvertisement(advertisementProperties);
+            await new AdvertisingManager(serverContext, bluezAdapterPath).CreateAdvertisement(advertisementProperties);
         }
     }
 }
